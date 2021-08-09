@@ -1,0 +1,50 @@
+---
+# tasks file for ./playbooks_collection/roles/fresh_install/buh/
+  - name: copy files in temp folder
+    win_copy:
+      src: ./files/1c_18_1208/
+      dest: 'c:\ansible_temp\1c'
+  - block: #======= CryptoPRO5 ===========
+
+    - name: copy files in temp folder
+      win_copy:
+        src: ./files/cp/
+        dest: 'c:\ansible_temp\cp'
+
+    - name: install CryptoPRO5
+      win_package:
+        path: C:\ansible_temp\cp\cppro5.exe
+        product_id: cppro5
+        arguments: -silent -nodlg
+        state: present
+      become: yes
+      become_method: runas
+
+    when: ccpro_ver_val == "5"
+
+  - block: #======= CryptoPRO4 ===========
+    - name: copy files in temp folder
+      win_copy:
+        src: ./files/cp/
+        dest: 'c:\ansible_temp\cp'
+ 
+    - name: install CryptoPRO4
+      win_package:
+        path: C:\ansible_temp\cp\cppro4.exe
+        product_id: cppro4
+        arguments: -silent -nodlg
+        state: present
+      become: yes
+      become_method: runas
+
+    when: ccpro_ver_val == "4"
+
+  - name: install 1C
+    win_package:
+      path: C:\ansible_temp\1c\Setup.exe
+      product_id: 1C
+      arguments: /S
+      state: present
+    become: yes
+    become_method: runas
+

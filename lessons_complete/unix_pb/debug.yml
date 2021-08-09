@@ -1,0 +1,32 @@
+---
+- name: variables
+  hosts: unix
+  become: yes
+#  gather_facts: yes
+  vars:
+    message1: privet
+    message2: world
+    secr    : evfkmdfvkfobv
+
+  tasks:
+  - name: print
+    debug:
+      var: secr
+
+  - debug:
+      msg: "this is sparta {{ owner }}"
+
+  - set_fact: full_msg="{{ message1 }} {{ message2 }} from {{ owner }}"
+
+  - debug:
+      var: full_msg
+
+  - debug:
+      var: ansible_distribution
+
+  - shell: uptime
+    register: result
+
+  - debug:
+      var: result.stdout
+#      var: result

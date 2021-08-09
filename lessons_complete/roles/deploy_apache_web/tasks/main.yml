@@ -1,0 +1,45 @@
+---
+# tasks file for deploy_apache_web
+  - name: check and print lin ver
+    debug: var=ansible_os_family
+
+  - block: #======= RH ===========
+
+      - name: install apache for redhot
+        yum: name=httpd state=latest
+
+      - name: start web server and make enabled for rh
+        service: name=httpd state=started enabled=yes
+    when: ansible_os_family == "RedHat"
+
+  - block: #========= DEB ==========
+
+      - name: inst apache for deb
+        apt: name=apache2 state=latest
+
+      - name: start web server and make enabled for deb
+        service: name=apache2 state=started enabled=yes
+    when: ansible_os_family == "Debian"
+
+  - name: jinja generate
+    template: src=debug.j2 dest={{ destin_folder }}/index.html mode=0555
+    notify:
+      - restart apache RH
+      - restart apache DEB
+    tags: copy_my_jinja
+
+  - name: copy my homepage
+    copy: src={{ item }}  dest={{ destin_folder }} mode=0555
+    with_fileglob: "{{ source_folder }}/*.*"
+    tags: copy my homepage
+
+#    loop:
+#      - "index.html"
+#      - "sea.png"
+#      - "shine.png"
+#      - "azure.png"
+
+    notify:
+      - restart apache RH
+      - restart apache DEB
+

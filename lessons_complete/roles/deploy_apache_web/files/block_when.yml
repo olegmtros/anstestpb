@@ -1,0 +1,45 @@
+---
+- name: install default apache web srv
+  hosts: unix
+  become: yes
+
+  vars:
+    source_file: ./mysite/index.html
+    destin_file: /var/www/html
+
+  tasks:
+  - name: check and print lin ver
+    debug: var=ansible_os_family
+
+  - block: #======= RH ===========
+
+      - name: install apache for redhot
+        yum: name=httpd state=latest
+
+      - name: copy my homepage
+        copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+        notify: restart apache RH
+
+      - name: start web server and make enabled for rh
+        service: name=httpd state=started enabled=yes
+    when: ansible_os_family == "RedHat"
+
+  - block: #========= DEB ==========
+
+      - name: inst apache for deb
+        apt: name=apache2 state=latest
+
+      - name: copy my homepage
+        copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+        notify: restart apache deb
+
+      - name: start web server and make enabled for deb
+        service: name=apache2 state=started enabled=yes
+    when: ansible_os_family == "Debian"
+
+  handlers:
+  - name: restart apache RH
+    service: name=httpd state=restarted
+
+  - name: restart apache deb
+    service: name=apache2 state=restarted

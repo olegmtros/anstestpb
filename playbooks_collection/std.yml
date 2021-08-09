@@ -1,0 +1,23 @@
+---
+- name: mt first test pb
+  hosts: win
+  gather_facts: no
+
+  vars:
+    ccpro_ver_val   : "{{ cppro_ver | default('none') }}"
+    update_req_val  : "{{ update_req | default('false') }}"
+    std_prog_val    : "{{ std_prog | default('true') }}"
+    remote_prog_val : "{{ remote_prog | default('false') }}"
+    buh_prog_val    : "{{ buh_prog | default('false') }}"
+    copy_old_val    : "{{ copy_old | default('false') }}"
+
+  tasks:
+  - name: Connect to hosts, and check availibility
+    win_ping:
+
+  roles:
+    - { role: std_prog, when: std_prog_val == 'true' }
+    - { role: updates, when: update_req_val == 'true' }
+    - { role: remote_work, when: remote_prog_val == 'true' }
+    - { role: buh, when: buh_prog_val == 'true' }
+    - { role: copy_from_old_workplace, when: copy_old_val == 'true' }

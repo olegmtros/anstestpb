@@ -1,0 +1,32 @@
+- name: Create mapped drive with credentials and save the username and password
+  hosts: win
+  vars_prompt:
+  - name: user
+    prompt: give user
+    private: no
+  - name: pass
+    prompt: give pass
+    private: yes
+  tasks:
+  - name: Save the network credentials required for the mapped drive
+    win_credential:
+      name: dc
+      type: domain_password
+      username: RYZE\adm
+      secret: QQqq111
+      state: present
+
+  - name: Create a mapped drive that requires authentication
+#    win_command: 'cmd.exe /c net use M: \\dc\shara' 
+
+    win_mapped_drive:
+      letter: M
+      path: \\dc\shara
+      state: present
+  vars:
+    # become is required to save and retrieve the credentials in the tasks
+    ansible_become: yes
+    ansible_become_method: pfexec
+    ansible_become_user: oleg
+    ansible_become_pass: QQqq11
+

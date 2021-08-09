@@ -1,0 +1,24 @@
+---
+- name: cmd ack cred
+  hosts: win
+  vars_prompt:
+  - name: user
+    prompt: give user
+    private: no
+  - name: pass
+    prompt: give pass
+    private: yes
+
+  tasks:
+
+    - name: get it
+      win_mapped_drive:
+        letter: M
+        path: \\dc\shara
+        username: '{{ user }}'
+        password: '{{ pass }}'
+#      win_command: c:\users\oleg\desktop\txt.bat
+#      win_command: "cmd /c net use * /d /y"
+#      win_command: 'cmd /c net use Y: \\192.168.5.2\shara /user:ryze\adm {{pass}}'
+#      win_command: 'cmd /c echo net use J: \\dc\shara\ /user:ryze\adm {{pass}}>>C:\txt.txt'
+      #win_command: 'cmd /c "echo /user:ryze\adm {{pass}}>>c:\txt"'

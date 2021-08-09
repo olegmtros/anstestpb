@@ -1,0 +1,31 @@
+---
+- name: variables
+  hosts: unix
+  become: yes
+#  gather_facts: yes
+  vars:
+    message1: "{{ my_var1 | default('privet') }}"
+    message2: "{{ my_var2 | default('world') }}"
+
+  tasks:
+  - name: print
+    debug:
+      var: secr
+
+  - debug:
+      msg: "this is sparta {{ owner }}"
+
+  - set_fact: full_msg="{{ message1 }} {{ message2 }} from {{ owner }}"
+
+  - debug:
+      var: full_msg
+
+  - debug:
+      var: ansible_distribution
+
+  - shell: uptime
+    register: result
+
+  - debug:
+      var: result.stdout
+#      var: result

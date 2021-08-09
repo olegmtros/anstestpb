@@ -1,0 +1,37 @@
+---
+- name: variables
+  hosts: unix
+  become: yes
+#  gather_facts: yes
+  vars:
+    message1: privet
+    message2: world
+    secr    : evfkmdfvkfobv
+
+  tasks:
+  - name: print
+    debug:
+      var: secr
+
+  - debug:
+      msg: "this is sparta {{ owner }}"
+
+  - set_fact: full_msg="from {{ owner }}"
+
+{{ ansible_hostname }}
+{{ ansible_os_family }}
+{{ ansible_default_ipv4.address }}
+
+
+#  - debug:
+#      var: full_msg
+
+#  - debug:
+#      var: ansible_distribution
+
+#  - shell: uptime
+#    register: result
+
+#  - debug:
+#      var: result.stdout
+#      var: result

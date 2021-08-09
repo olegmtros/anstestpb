@@ -1,0 +1,25 @@
+---
+- name: absent test
+  hosts: win
+  gather_facts: no
+  become: yes
+  become_method: runas
+  tasks:
+
+  - name: clear temp folder
+#    win_shell: remove-item C:\ansible_temp
+    win_command: cmd.exe /c del /Q /S C:\ansible_temp
+    become: yes
+    become_method: runas
+
+
+#    win_file:
+#      path: C:\ansible_temp
+#      state: absent
+
+
+
+#    win_path:
+#      elements: C:\ansible_temp\
+#      state: absent
+

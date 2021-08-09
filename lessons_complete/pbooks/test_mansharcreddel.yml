@@ -1,0 +1,13 @@
+---
+- name: cmd ack cred
+  hosts: win
+#  vars_prompt:
+ # - name: pass
+ #   prompt: give pass
+ #   private: yes
+
+  tasks:
+
+    - name: get it
+      win_command: 'net use * /d'
+

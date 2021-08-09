@@ -1,0 +1,8 @@
+---
+- name: test raw module
+  hosts: all 
+  tasks:
+    - name: run ipconfig
+      raw: ipconfig
+      register: ipconfig
+    - debug: var=ipconfig

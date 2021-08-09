@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - ../playbooks_collection/roles/fresh_install/std_progs/

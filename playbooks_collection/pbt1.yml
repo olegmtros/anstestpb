@@ -1,0 +1,41 @@
+---
+- name: mt first test pb
+  hosts: win
+  gather_facts: no
+
+  vars:
+    update_req  : "{{ update_req_var | default('false') }}"
+    std_prog    : "{{ std_prog_var | default('true') }}"
+    remote_prog : "{{ remote_prog_var | default('false') }}"
+    buh_prog    : "{{ buh_prog_var | default('false') }}"
+    copy_old    : "{{ copy_old_var | default('false') }}"
+
+  tasks:
+  
+  - name: Connect to hosts, and check availibility
+    win_ping: 
+
+  - block: #=======START SDT=========
+    - name: start block STD
+      include: "./std_prog.yml"
+    when: std_prog == 'true'
+
+  - block: #=======START UPD=========
+    - name: start block UPD
+      include: ./update_req.yml
+    when: update_req == "true"
+
+  - block: #=======START REMOTE=========
+    - name: start block UPD
+      include: ./remote_work.yml
+    when: remote_prog == "true"
+
+  - block: #=======START BUH=========
+    - name: start block UPD
+      include: ./buh.yml  
+    when: buh_prog == "true"
+
+  - block: #=======START COPY=========
+    - name: start block UPD
+      include: ./copy_fromto.yml
+    when: copy_old == "true"

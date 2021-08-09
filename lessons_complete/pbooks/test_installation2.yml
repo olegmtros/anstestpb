@@ -1,0 +1,8 @@
+---
+- name: fuu
+  hosts: win
+  tasks:
+    - name: copy
+      ansible.windows.win_copy:
+        src: /home/oleg
+        dest: C:\home\o2

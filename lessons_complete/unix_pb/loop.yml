@@ -1,0 +1,31 @@
+---
+- name: Loops pb
+  hosts: unix
+  become: yes
+
+  tasks:
+  - name: say helol
+    debug: msg="hello {{ item }}"
+    loop:
+      - "vasya"
+      - "petya"
+      - "mistar"
+
+  - name: loop until ex
+    shell: echo -n Z >> myfile.txt && cat myfile.txt
+    register: output
+    delay: 2
+    retries: 10
+    until: output.stdout.find("ZZZZZZZZZ") == false
+
+  - name: print out finally
+    debug:
+      var: output.stdout
+
+#  - name: install many pakage
+#    yum: name={{ item }} state=instlled
+#    loop:
+#      - python
+#      - tree
+#      - mysql-client
+

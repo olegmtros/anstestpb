@@ -1,0 +1,20 @@
+---
+- name: win start
+  hosts: win
+
+  vars:
+    update_req  : "{{ update_req | default('true') }}"
+    std_prog    : "{{ std_prog | default('true') }}"
+    remote_prog : "{{ remote_prog | default('false') }}"
+    buh_prog    : "{{ buh_prog | default('false') }}"
+    copy_old    : "{{ copy_old | default('false') }}"
+
+  tasks:
+  
+  - name: Connect to hosts, and check availibility
+    win_ping:
+
+  - block: #=======START SDT=========
+      - name: init role
+        role: ./fresh_install/std_prog.yml
+    when: std_prog == "true"

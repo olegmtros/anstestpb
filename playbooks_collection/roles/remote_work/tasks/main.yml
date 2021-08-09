@@ -1,0 +1,37 @@
+---
+# tasks file for ../playbooks_collection/roles/fresh_install/remote_work/
+  - name: Copy packages to Temp directory
+    win_copy:
+      src: ./files/
+      dest: 'c:\ansible_temp\remote'
+#      with_fileglob: '{{ source_folder }}/*.*'
+
+  - name: install tv12
+    win_package:
+      path: C:\ansible_temp\remote\tv12.exe
+      product_id: tv12
+      arguments: /S
+      state: present
+    become: yes
+    become_method: runas
+
+  - name: install anydesk
+    win_package:
+      path: C:\ansible_temp\remote\AnyDesk-CM.msi
+#      product_id: anydesk
+#      arguments: --install --start-with-win --silent --create-shortcuts --create-desktop-icon
+      state: present
+    become: yes
+    become_method: runas
+
+  - name: unpack anyconnect
+    win_command: C:\ansible_temp\remote\anyconnect.3.1.14018.exe /extract
+
+  - name: install anyconnect
+    win_package:
+      path: C:\ansible_temp\remote\7CD12F2\WinSetup-Release-web-deploy.msi
+#      product_id: anyconnect
+#      arguments: 
+      state: present
+    become: yes
+    become_method: runas

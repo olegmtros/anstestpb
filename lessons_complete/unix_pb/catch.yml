@@ -1,0 +1,24 @@
+---
+- name: ans faillures
+  hosts: unix
+  become: yes
+
+  tasks:
+    - name: t nomer1
+      yum: name=treeee state=latest
+      ignore_errors: yes
+
+    - name: t nom2
+      shell: echo hell
+      register: results
+      failed_when : "'helffl' in results.stdout"
+    - debug:
+        var: results
+
+    - name: t3
+      shell: echo sdvfsdffdsfsdfdsfsdfsdfs
+      register: results
+      failed_when : "'hell' in results.stdout"
+    - debug:
+        var: results
+

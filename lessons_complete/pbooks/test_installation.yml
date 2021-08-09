@@ -1,0 +1,19 @@
+---
+- name: probably installs
+  hosts: win
+#  gather_facts: no
+  tasks:
+    - name: copy file
+      win_copy:
+        src: /home/oleg/pans/7z1900x64.exe
+        dest: C:\temp\
+
+- name: try install exe
+  hosts: win
+  tasks:
+    - name: brr
+      win_package:
+        path: c:\temp\7z1900x64.exe
+        product_id: 7zip
+        arguments: /S
+        state: present
