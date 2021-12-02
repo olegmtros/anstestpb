@@ -1,0 +1,65 @@
+---
+- name: db install
+  hosts: ks
+  gather_facts: no
+
+  tasks:
+  - name: define apache host address
+    setup:
+    register: res
+    delegate_to: 127.0.0.1
+
+  - set_fact: iph='{{ res.ansible_facts.ansible_default_ipv4.address }}'
+
+  - name: Add or update registry path MyCompany, with dword entry 'hello', and containing 1337 as the decimal value
+    win_regedit:
+      path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+      name: UseWUServer
+      data: 0
+      type: dword
+
+
+  - name: Install .Net 3.5
+    win_optional_feature:
+      name: NetFx3
+      state: present
+#  - name install net
+#    win_shell: 'Dism /online /enable-feature /featurename:NetFX3 /All'
+
+  - name: install dv
+    win_file:
+      path: C:\ansible_temp
+      state: directory
+
+  - name: download urls
+    win_get_url:
+      url: http://{{ iph }}/dv_progs/{{ item }}
+      dest: C:\ansible_temp\{{ item }}
+    loop:
+      - 'dvclient.msi'
+      - 'dvpatch.msp'
+
+  - name: install dv
+    win_package:
+      path: 'C:\ansible_temp\{{ item }}'
+#      arguments: /qn allusers=1
+      state: present
+    become: yes
+    become_method: runas
+    loop:
+      - 'dvclient.msi'
+      - 'dvpatch.msp'
+
+  - name: Add or update registry path MyCompany, with dword entry 'hello', and containing 1337 as the decimal value
+    win_regedit:
+      path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+      name: UseWUServer
+      data: 1
+      type: dword
+
+  - name: clear temp folder
+    win_file:
+      path: C:\ansible_temp
+      state: absent
+    become: yes
+    become_method: runas
